@@ -1,0 +1,331 @@
+---
+title: "README"
+author: "David Nadler, Ph.D., ASP, ENV SP"
+date: "9/24/2021"
+output:
+  html_document: default
+  pdf_document: default
+email: dnadler@nyit.edu
+---
+```{r, echo=FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
+
+# rEHS package
+``` {r}
+
+library(tidyr)
+library(readr)
+``` 
+The **rEHS** package includes a set of tools for practical Environmental, Health and Safety management.
+Download the package from: 
+```{r eval = FALSE}
+library(devtools)
+# and install_github("nadlerphd/rEHS")
+```
+and open it in R:
+``` {r}
+library(rEHS)
+```
+
+## Calculate new concentration after a time interval 
+### concentration(contaminant.generation.rate, flow.rate.cfm, timeframe, volume.cf)
+
+**contaminant.generation.rate:** 
+the rate of contaminant released in cubic feet per minute (cfm)
+
+**flow.rate.cfm:**
+the rate of air flow in cubic feet per minute (cfm)
+
+**timeframe:**
+the number of minutes (min) it takes to reach the new concentration
+
+**volume.cf:**
+the volume of the room in cubic feet (cf)
+
+``` {r}
+concentration(1.4, 2500, 11, 75000)
+```
+**where:**
+contaminant generation is 1.4 cfm, air flow is 2500 cfm, 11 minutes is the time interval, and room is 75,000 cubic feet
+
+***
+## Calculate DART rate
+### dart(dart.incidents, total.hours.worked)  
+
+$\text{dart rate} = \frac{\text{dart incidents}}{\text{total hours worked}}$
+
+**dart.incidents**:*
+number of dart-related incidents as defined above
+
+**total.labor.hours**
+total number of hours employees worked in a reporting period
+
+``` {r}
+dart(2, 28000)
+```
+**where:**
+for every 100 employees, 14.29 incidents resulted in lost or restricted days or job transfer due to work related injuries or illnesses
+
+***
+## Sound level at various distances
+### db(dB0, distance.original, distance.new)  
+
+$dB_{1}=dB_0+20\text{log}_{10}\frac{\text{original distance}}{\text{new distance}}$  
+
+**dB0:**
+the original sound measurement (dB)
+
+**distance.original:**
+the original distance where noise measurement was taken
+
+**distance.new:**
+the second distance to calculate the sound level reading
+
+``` {r}
+dB.distance(92, 4, 10)
+```
+**where:**
+sound level is 92 dB at 4 feet from a source. At 10 feet from source, sound level is measured as 84.04 dB
+
+***
+## Calculate OSHA incident rate
+### incident.rate(recordable.cases, total.hours.worked)  
+
+$\text{incident rate} = \frac{\text{recordable cases}}{\text{total hours worked}}$
+
+**recordable.cases:**
+all work related deaths, illnesses, and injuries which result in a loss of consciousness, restriction of work or motion, permanent transfer to another job within the company, or that require some type of medical treatment or first-aid.
+
+**total.hours.worked:**
+total number of hours employees worked in a reporting period
+
+``` {r}
+incident.rate(17, 1500000)
+```
+**where:**
+there are 17 recordable cases from 1.5 million hours, and for every 100 employees, 2.27 have been involved in a recordable injury or illness
+
+***
+## Conversion of mg/m^3^ to ppm
+### mgm3.to.ppm(mg.per.cubic.meter, molecular.weight)  
+$\text{ppm}=\frac{24.45 \times \frac{mg}{m^3}}{\text{molecular weight}}$
+
+**mg.per.cubic.meter: ** milligrams per cubic meter
+
+**molecular.weight:**	molecular weight
+
+``` {r}
+mgm3.to.ppm(10 ,78)
+```
+**where:**
+concentration of acyrlamide is 10 mg/m^3^ and molecular weight of acrylamide is 78 grams/mol
+
+***
+## Conversion of ppm to mg/m^3^
+### ppm.to.mgm3(ppm, molecular.weight)  
+$\frac{\text{mg}}{m^3}=\frac{\text{ppm }\times \text{molecular weight}}{24.45}$  
+
+**ppm:** concentration of molecule in parts per million
+
+``` {r}
+ppm.to.mgm3(3.13 ,78)
+```
+**where:** 
+concentration of acyrlamide is 3.13 mg/m^3^ and molecular weight of acrylamide is 78 grams/mol
+
+***
+## Calculating the minimum air sampling volume
+### min.air.volume(limit.of.quantification.mg, contaminant.target.concentration.mgm3)  
+
+$\text{Volume}_{min}=\frac{\text{limit of quantification (mg)}}{\text{target concentration} (\text{mg/m}^{3})}$
+
+
+**limit.of.quantification.mg:** the smallest amount or the lowest concentration of a substance that is possible to be determined by means of a given analytical procedure with the established accuracy, precision, and uncertainty
+
+**contaminant.target.concentration.mgm3:** an estimate of the airborne concentrations of the contaminant being tested in mg/m^3^
+
+``` {r}
+min.air.volume(0.0027,500)
+```
+
+**where:**
+a 0.0027 mg/m3 limit of quantification (concentration) exists for acetone and we are 
+interested in a target concentration of 500 mg/m^3^
+
+
+## Comparing an incident rate to an industry incident rate
+### my.ir.comparison(my.ir, my.naics.code)
+
+**my.ir:** input your OSHA-recordable incident rate
+
+**my.naics.code:** input your industry's NAICS number
+
+``` {r}
+myir(2.7, 3115)
+``` 
+
+**where:**
+incident rate = 2.7 and 
+industry is dairy product manufacturing (NAICS 3115)
+
+TRUE output translates to your incident rate as being lower than the industry incident rate.
+
+***
+
+## Calculate air flow
+### q.cfm(air.velocity.fpm, area.sf)
+$\text{Q}_{cfm} = \text{air velocity (fpm) }\times \text{area } (\text{ft}^{2})$
+
+**air.velocity.fpm:** velocity of air in feet per minute
+
+**area.sf:** cross-sectional area of air vent
+
+``` {r}
+q.cfm(5, 2)
+```
+
+**where:**
+where air velocity is 5 fpm and vent cross-sectional area is 2 sf
+
+***
+
+## Recommended Weight Limit and Lifting Index
+### rwl(horizontal.dist, vertical.dist, distance, angle, seconds.between.lifts, grasp, object.weight)
+
+
+**horizontal.dist:** horizontal location of the object relative to the body (cm)
+
+**vertical.dist:** vertical location of the object relative to the floor (cm)
+
+**distance:** distance the object is moved vertically (cm)
+
+**angle:**the asymmetric angle is the amount (in degrees) of trunk and shoulder rotation required by the lifting task. Angle must be input as 90, 60, 45, 30, or 0
+
+**seconds.between.lifts:** time between lifts in seconds (s). Time must be entered as 300, 60, 30, 15, 10, or 6
+
+**grasp:**
+quality of the workers grip on the object (1 = good, 2 = fair, 3 = poor)
+
+**object.weight:**
+weight of the object in kilograms (kg)
+
+``` {r}
+rwl(45, 25, 40, 0, 15, 1, 20)
+``` 
+
+a worker is 45 cm from an object horizontally, object is 25 cm above the floor and must be lifted 40 cm up.
+
+The worker is positioned 0 degrees relative to the 20 kg object and has a good (1) grip.
+
+variable LI (lifting index) is created (5.328).
+
+variable weight.limit is created (3.75).
+
+LI interpretations:
+
+* <=1: very low risk
+
+* 1.01 - 1.50: low risk
+
+* 1.51 - 2.00: moderate risk
+
+* 2.01 - 3.00: high risk
+
+* *> *3.01: very high risk
+
+weight.limit interpretation:
+
+the acceptable maximum weight (kg) that is safe under the
+horizontal, vertical, and distance data input in the rwl() function,
+including the angle, seconds between lifts, and grasp.
+
+***
+
+## Calculating the severity rate
+### severity.rate(total.days.lost, total.recordable.incidents)  
+
+$\text{severity rate} = \frac{\text{total days lost}}{\text{total recordable incidents}}$  
+
+**total.days.lost:** 
+total number of work days lost due to injury and illness. number of days lost do not need to be consecutive
+
+**total.recordable.incidents:** total number of recordable incidents that happened in a reporting period
+
+``` {r}
+severity.rate(5, 2)
+```
+5 work days were lost from 2 recordable incidents  
+the average recordable incident resulted in 2.5 lost days
+
+*** 
+
+## Permissible noise exposure
+### T(dB)  
+
+$\text{permissible exposure time}=\frac{8}{2^{0.2(\text{db - 90})}}$  
+
+**dB:** number of decibels of noise
+
+``` {r}
+T(88)
+```
+**where:**
+the exposure is 88 decibels
+
+***
+
+## Calculating the time interval in minutes for new concentration of contaminant
+### time.interval(volume.cf, flow.rate.cfm, contaminant.generation.rate.cfm, concentration.ppm)
+
+**volume.cf:** volume of room or enclosure (cubic feet)
+
+**flow.rate.cfm:** flow rate of the air (cfm)
+
+**contaminant.generation.rate.cfm:** rate of generation of contaminant (cfm)
+
+**concentration.ppm:** concentration of the contaminant to predict (ppm)
+
+``` {r}
+time.interval(75000, 2500, 1.4, 175)
+```
+
+**where:**
+room volume is 75,000 cubic feet
+air flow rate is 2500 cfm
+contaminant is generated at 1.4 cfm
+
+***
+
+## Calculating air velocity in feet per minute
+### velocity.fpm(velocity.pressure.as.h2o)
+$\text{Velocity}_{fpm}=4005\sqrt{\text{velocity pressure}}$
+
+**velocity.pressure.as.h2o:** pressure in the direction of flow necessary to caus the air at rest to flow at a given velocity
+
+``` {r}
+velocity.fpm(.20)
+```
+
+**where:**
+there is a velocity pressure of 0.2 inches
+
+***
+
+## Wind chill
+### wind.chill(temp.fahr, wind.speed.mph)  
+
+$\text{wind chill }F{^\circ}=35.74+0.625\text{F}^{\circ}-35.75\text{ (wind speed mph)}^{0.16} +
+0.4275\text{F}^{\circ}\text{(wind speed mph)}^{0.16}$
+
+**temp.fahr:** degrees in Fahrenheit (must be below 70)
+
+**wind.speed.mph:** measured wind speed in miles per hour (mph)
+
+``` {r}
+wind.chill(40, 15)
+```
+
+
+##### **To cite this package, **
+##### Nadler, David (2022). rEHS: an R package for EHS management.

@@ -1,0 +1,20 @@
+citHeader("To cite rEHS in publications use:")
+
+citEntry(entry = "Misc",
+  title        = "rEHS: an R Package for EHS Management",
+  author       = personList(as.person("David Nadler")),
+
+  journal      = "",
+  year         = "2022",
+  volume       = "",
+  number       = "",
+  pages        = "",
+  url          = "https//github.com/nadlerphd/rEHS",
+
+  textVersion  =
+  paste("David Nadler (2022).",
+        "rEHS: an R Package for EHS Management.",
+
+        "URL http://github.com/nadlerphd/rEHS.")
+)
+
